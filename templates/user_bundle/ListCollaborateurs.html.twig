@@ -1,0 +1,205 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Admin - TTBS </title>
+
+    <!-- Custom fonts for this template-->
+    <link
+      href="{{ asset('backtemp/vendor/fontawesome-free/css/all.min.css')}}"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="{{ asset('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')}}"
+      rel="stylesheet"
+    />
+
+    <!-- Custom styles for this template-->
+    <link href="{{ asset('backtemp/css/sb-admin-2.min.css')}}" rel="stylesheet" />
+  </head>
+
+  <body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+      <!--begin sidebar -->
+      {{ include('Back/sidebar.html.twig') }}
+      <!-- End of Sidebar -->
+
+      <!-- Content Wrapper -->
+      <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+          <!-- Topbar -->
+           <!--begin topbar -->
+                {{ include('Back/topbar.html.twig') }}
+
+          <!-- End of Topbar -->
+
+          <!-- Begin Page Content -->
+          <div class="container-fluid">
+         <div class="row page-header"><div class="col-lg-6 align-self-center ">
+        <h2>Users Tables</h2>
+      </div></div>
+
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-default">
+                    Users
+                </div>
+             
+     {{ form_start(form) }}
+
+<div class="form-row align-items-end" >
+ <div class="col">
+   {{ form_row(form.nom) }}
+ </div>
+  <div class="col">
+   {{ form_row(form.nom) }}
+ </div>
+ 
+
+  <div class="col">
+   <div class="form-group">
+      <button type="submit" class="btn btn-success">Rechercher</button>
+    </div>
+ </div>
+</div>
+ {{ form_end(form) }}
+
+
+                <div class="card-body">
+                
+
+                    <table class="footable table table-hover" data-page-size="12" data-filter=#filter>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th >Email</th>
+                            <th>Role</th>
+                              <th>Enabled</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                        {% if user.getRole() in ['ROLE_COLLABORATEUR'] %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>
+                                    {{ user.username }}
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.role }}</td>   
+                               <td>{{ user.enabled }}</td>                         
+                        <td class="text-center">
+                  <a href="{{ path('user_edit', {'id': user.id}) }} " class="btn btn-sm btn-success"><i class="fa fa-pencil-square"></i>Edit</a>
+
+                                    {{ include('user_bundle/_delete_form.html.twig') }}
+                                </td>
+                            </tr>
+                             {% endif %}
+                        {% endfor %}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="5">
+                                <ul class="pagination float-right"></ul>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        </div>
+        <!-- End of Main Content -->
+
+     
+      </div>
+      <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+      <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div
+      class="modal fade"
+      id="logoutModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button
+              class="close"
+              type="button"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Select "Logout" below if you are ready to end your current session.
+          </div>
+          <div class="modal-footer">
+            <button
+              class="btn btn-secondary"
+              type="button"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <a class="btn btn-primary" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="{{ asset('backtemp/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('backtemp/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="{{ asset('backtemp/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="{{ asset('backtemp/js/sb-admin-2.min.js') }}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{ asset('backtemp/vendor/chart.js/Chart.min.js') }}"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="{{ asset('backtemp/js/demo/chart-area-demo.js') }}"></script>
+    <script src="{{ asset('backtemp/js/demo/chart-pie-demo.js') }}"></script>
+  </body>
+</html>
+{% endblock %}
