@@ -25,7 +25,8 @@ security:
         #zedetha ena hadhi
         default_target_path: /back/bundle
         #khw kan star eli fouki
-      logout: true
+      logout: 
+        target: fos_user_security_login
       anonymous: true
 
   # Easy way to control access for large sections of your site

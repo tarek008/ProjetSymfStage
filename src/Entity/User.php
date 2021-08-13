@@ -24,6 +24,25 @@ class User extends BaseUser
      */
     protected $id;
 
+    /**
+     *
+     * @ORM\Column(name="image", type="string", length=255)
+     * @Assert\File(maxSize="500k", mimeTypes={"image/jpeg", "image/jpg", "image/png", "image/GIF"})
+     */
+    protected $image ;
+
+    /**
+     * @ORM\Column(type="string")
+     */protected $presence;
+
+    /**
+     * @ORM\Column(type="integer")
+     */protected $nbrhworked;
+
+    /**
+     * @ORM\Column(type="integer")
+     */protected $remunerationtotal;
+
 
     /**
      * @return array
@@ -60,6 +79,71 @@ class User extends BaseUser
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getpresence()
+    {
+        return $this->presence;
+    }
+
+    /**
+     * @param mixed $presence
+     */
+    public function setpresence($presence)
+    {
+        $this->presence = $presence;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getnbrhworked()
+    {
+        return $this->nbrhworked;
+    }
+
+    /**
+     * @param mixed $nbrhworked
+     */
+    public function setnbrhworked($nbrhworked)
+    {
+        $this->nbrhworked = $nbrhworked;
+    }
+
+    /**
+     * @return mixed $remunerationtotal
+     */
+    public function getremunerationtotal()
+    {
+        return $this->remunerationtotal;
+    }
+
+    /**
+     * @param mixed $remunerationtotal
+     */
+    public function setremunerationtotal($remunerationtotal)
+    {
+        $this->remunerationtotal = $remunerationtotal;
     }
 
 

@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BackBundleController extends AbstractController
 {
+
     /**
      * @Route("/back/bundle", name="back_bundle")
      */
@@ -17,9 +18,4 @@ class BackBundleController extends AbstractController
             'controller_name' => 'BackBundleController',
         ]);
     }
-
-
-  
-
-
 }

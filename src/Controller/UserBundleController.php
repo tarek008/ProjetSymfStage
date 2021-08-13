@@ -9,6 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\PropertySearch;
 use App\Form\PropertySearchType;
+use Swift_SmtpTransport;
+use Symfony\Component\HttpFoundation\File\File;
+
+
 
 
 class UserBundleController extends AbstractController
@@ -27,6 +31,19 @@ class UserBundleController extends AbstractController
       #  ]);
   #  }
 
+    /**
+     * @Route("/", name="homepage")
+     */
+    public function indexAction(Request $request)
+    {
+        // replace this example code with whatever you need
+        return $this->render('back_bundle/index.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+
+
   /**
     *@Route("/user/bundle",name="user_index")
     */
@@ -35,34 +52,22 @@ class UserBundleController extends AbstractController
     $propertySearch = new PropertySearch();
     $form = $this->createForm(PropertySearchType::class,$propertySearch);
     $form->handleRequest($request);
-   //initialement le tableau des articles est vide, 
-   //c.a.d on affiche les articles que lorsque l'utilisateur clique sur le bouton rechercher
+   //initialement le tableau des users est vide, 
+   //c.a.d on affiche les Users que lorsque l'utilisateur clique sur le bouton rechercher
     $users= [];
     
    if($form->isSubmitted() && $form->isValid()) {
-   //on récupère le nom d'article tapé dans le formulaire
+   //on récupère le nom d'User tapé dans le formulaire
     $nom = $propertySearch->getNom();   
     if ($nom!="") 
-      //si on a fourni un nom d'article on affiche tous les articles ayant ce nom
+      //si on a fourni un nom d'User on affiche tous les Users ayant ce nom
       $users= $this->getDoctrine()->getRepository(User::class)->findBy(['username' => $nom] );
     else   
-      //si si aucun nom n'est fourni on affiche tous les articles
+      //si si aucun nom n'est fourni on affiche tous les Users
       $users= $this->getDoctrine()->getRepository(User::class)->findAll();
    }
     return  $this->render('user_bundle/ListCollaborateurs.html.twig',[ 'form' =>$form->createView(), 'users' => $users]);  
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -81,27 +86,33 @@ class UserBundleController extends AbstractController
     }
 
 
-  /**
+       /**
      * @Route("/user/{id}/edit", name="user_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, User $user): Response
-    {
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+     public function edit(Request $request, User $user): Response
+     {
+         $form = $this->createForm(UserType::class, $user);
+         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+         if ($form->isSubmitted() && $form->isValid()) {
 
-            return $this->redirectToRoute('user_index');
-        }
-
-        return $this->render('user_bundle/edit.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
-        ]);
-    }
+          
+ /** @var UploadedFile $file */
+ $file = $user->getImage();
+ $filename= md5(uniqid()) . '.' . $file->guessExtension();
+ $file->move($this->getParameter('photos_directory'), $filename);
+ $user->setImage($filename);
 
 
+             $this->getDoctrine()->getManager()->flush();
+             return $this->redirectToRoute('user_index');
+         }
+
+         return $this->render('user_bundle/edit.html.twig', [
+             'user' => $user,
+             'form' => $form->createView(),
+         ]);
+     }
 
        /**
      * @Route("/user/{id}", name="user_delete", methods={"POST"})
@@ -116,5 +127,29 @@ class UserBundleController extends AbstractController
 
         return $this->redirectToRoute('user_index');
     }
+
+
+      /**
+     * @Route("/user/bundle/statistique", name="user_stats")
+     */
+
+    public function statistiques(Request $request ){
+      $users= [];
+
+      $users= $this->getDoctrine()->getRepository(User::class)->findAll();
+ 
+      $categNom=[];
+
+      foreach($users as $user){
+        $categNom = $user->getRole();  
+      }
+      
+
+
+
+      return $this->render('user_bundle/userstats.html.twig',[
+        'categNom'=>json_encode($categNom),
+      ]);
+  }
 
 }
